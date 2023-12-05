@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17-slim
 WORKDIR /app
-COPY --from=build /app/target/curriculo-0.0.1-SNAPSHOT.jar /app/curriculo.jar
+COPY --from=build /app/target/back-end_SB_AOS-0.0.1-SNAPSHOT.jar /app/curriculo.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/curriculo.jar"]
