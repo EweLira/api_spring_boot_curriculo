@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-alpine as build
+FROM openjdk:17-jdk-alpine as build
 
 # Definir o diretório de trabalho no container
 WORKDIR /workspace/app
@@ -11,11 +11,11 @@ RUN apt-get install maven -y
 RUN mvn clean install -DskipTests
 
 # Segunda etapa da construção, para obter uma imagem mais limpa e leve
-FROM openjdk:11-jdk-alpine
+FROM openjdk:17-jdk-alpine
 VOLUME /tmp
 
 
-FROM openjdk:11-slim
+FROM openjdk:17-slim
 WORKDIR /app
 COPY --from=build /app/target/back-end_SB_AOS-0.0.1-SNAPSHOT.jar /app/curriculo.jar
 EXPOSE 8080
