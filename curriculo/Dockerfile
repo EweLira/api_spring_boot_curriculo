@@ -1,8 +1,18 @@
+FROM openjdk:17-jdk-alpine as build
 
-FROM maven:3.8.4-openjdk-17-slim AS build
-WORKDIR /app
+# Definir o diretório de trabalho no container
+WORKDIR /workspace/app
+
+# Copiar o arquivo pom.xml e os arquivos de código fonte
 COPY . .
-RUN mvn clean package -DskipTests
+
+# Construir o aplicativo com Maven
+RUN apt-get install maven -y
+RUN mvn clean install -DskipTests
+
+# Segunda etapa da construção, para obter uma imagem mais limpa e leve
+FROM openjdk:17-jdk-alpine
+VOLUME /tmp
 
 
 FROM openjdk:17-slim
