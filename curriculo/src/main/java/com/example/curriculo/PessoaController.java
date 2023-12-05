@@ -12,9 +12,10 @@ import java.util.Optional;
 @RequestMapping("/api/pessoas")
 public class PessoaController {
 
+    @Autowired
     private final PessoaService pessoaService;
 
-    @Autowired
+    
     public PessoaController(PessoaService pessoaService) {
         this.pessoaService = pessoaService;
     }
