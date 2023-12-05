@@ -1,10 +1,10 @@
-FROM openjdk:17-jdk-alpine as build
+# FROM openjdk:17-jdk-alpine as build
 
-# Definir o diretório de trabalho no container
-WORKDIR /workspace/app
+# # Definir o diretório de trabalho no container
+# WORKDIR /workspace/app
 
-# Copiar o arquivo pom.xml e os arquivos de código fonte
-COPY . .
+# # Copiar o arquivo pom.xml e os arquivos de código fonte
+# COPY . .
 
 # # Construir o aplicativo com Maven
 # RUN apt-get install maven -y
