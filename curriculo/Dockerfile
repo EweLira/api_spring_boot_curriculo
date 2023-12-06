@@ -1,36 +1,43 @@
+# Utilizar uma imagem base do OpenJDK para rodar a aplicação
+
 FROM openjdk:17-jdk-alpine as build
-
-# Definir o diretório de trabalho no container
-WORKDIR /workspace/app
-
-# Copiar o arquivo pom.xml e os arquivos de código fonte
-COPY . .
-
-# Construir o aplicativo com Maven
-RUN apt-get install maven -y
-RUN mvn clean install -DskipTests
-
-# Segunda etapa da construção, para obter uma imagem mais limpa e leve
-FROM openjdk:17-jdk-alpine
-VOLUME /tmp
-
-
-FROM openjdk:17-slim
-WORKDIR /app
-COPY --from=build /app/target/back-end_SB_AOS-0.0.1-SNAPSHOT.jar /app/curriculo.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/curriculo.jar"]
-
-# # Etapa 1: Build da aplicação usando Maven
-# FROM maven:3.8.4-openjdk-11-slim AS build
-# WORKDIR /app
-# COPY pom.xml .
-# COPY src ./src
-# RUN mvn clean package -DskipTests
  
-# # Etapa 2: Configuração do ambiente de execução
-# FROM openjdk:11-jdk-slim
-# WORKDIR /app
-# COPY --from=build /app/target/curriculo-0.0.1-SNAPSHOT.jar /app/curriculo.jar
-# EXPOSE 8080
-# ENTRYPOINT ["java", "-jar", "/app/curriculo.jar"]
+# Definir o diretório de trabalho no container
+
+WORKDIR /workspace/app
+ 
+# Copiar o arquivo pom.xml e os arquivos de código fonte
+
+COPY mvnw .
+
+COPY .mvn .mvn
+
+COPY pom.xml .
+
+COPY src src
+ 
+# Dar permissão de execução ao Maven Wrapper
+
+RUN chmod +x ./mvnw
+ 
+# Construir o aplicativo com Maven Wrapper
+
+RUN ./mvnw clean install
+ 
+# Segunda etapa da construção, para obter uma imagem mais limpa e leve
+
+FROM openjdk:17-jdk-alpine
+
+VOLUME /tmp
+ 
+# Copiar o arquivo JAR do estágio de construção para o estágio de execução
+
+COPY --from=build /workspace/app/target/back-end_SB_AOS-0.0.1-SNAPSHOT.jar app.jar
+ 
+# Indicar que o container irá escutar na porta 8080
+
+EXPOSE 8080
+ 
+# Comando para executar a aplicação
+
+ENTRYPOINT ["java","-jar","/app.jar"]
