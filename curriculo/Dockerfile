@@ -23,7 +23,7 @@ RUN chmod +x ./mvnw
 # Construir o aplicativo com Maven Wrapper
 
 RUN ./mvnw clean install
-RUN mvn spring-boot:run
+
  
 # Segunda etapa da construção, para obter uma imagem mais limpa e leve
 
